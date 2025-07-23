@@ -81,3 +81,32 @@ Inside application.properties:
 ### 🙋‍♂️ Author
 Naveen K
 Full Stack Developer
+
+
+
+# Reference commands
+  * docker run --name mysql-docker -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb -e TZ=Asia/Kolkata -p 3306:3306 -d mysql:8.0
+  
+  * if you remove the container sql data not stored below comamnd using Use a Docker volume to retain MySQL data across restarts and container rebuilds. \
+  docker run --name mysql-docker -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb -e TZ=Asia/Kolkata -v mysql_data:/var/lib/mysql -p 3306:3306 -d mysql:8.0
+  
+  * cmd line docker mysql login \
+  	docker exec -it mysql-docker mysql -u root -p \
+  	username - root \
+  	password - rootpassword \
+    SHOW DATABASES; \
+    USE testdb;
+
+
+## Build the jar first
+mvn clean package (need to install maven in local machine)
+
+## Above command error below use(This avoids the Hibernate connection error during testing.)
+mvn clean package -DskipTests
+
+## Start both services(if you have any changes in the spirngboot project you need to restart)
+docker-compose up --build
+
+## If you only want to rebuild and restart the Spring Boot app container (and not MySQL):
+docker-compose up --build app
+
