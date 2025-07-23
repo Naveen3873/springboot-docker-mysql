@@ -1,6 +1,7 @@
 package com.app.demo.service;
 
 import java.util.List;
+import java.util.Map;
 import com.app.demo.dto.UserDTO;
 
 public interface UserService {
@@ -10,5 +11,6 @@ public interface UserService {
     UserDTO createUser(UserDTO dto);
     UserDTO updateUser(Long id, UserDTO dto);
     void deleteUser(Long id);
+    Map<String, List<UserDTO>> getGroupByRole();
 
 }

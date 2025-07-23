@@ -1,6 +1,7 @@
 package com.app.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import com.app.demo.repository.UserRepository;
 import com.app.demo.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,4 +57,10 @@ public class UserController {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@GetMapping("/group-by-role")
+	public ResponseEntity<Map<String, List<UserDTO>>> getGroupByRole() {
+		return ResponseEntity.ok(userService.getGroupByRole());
+	}
+	
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+    
+    @Override
+    public Map<String, List<UserDTO>> getGroupByRole() {
+    	List<User> users =  userRepository.findAll();
+    	
+    	List<UserDTO> userDTOs = users.stream()
+    			.map(user -> UserDTO.builder()
+    					.id(user.getId())
+    					.name(user.getName())
+    					.role(user.getRole())
+    					.salary(user.getSalary())
+    					.age(user.getAge())
+    					.createdAt(user.getCreatedAt())
+    					.updatedAt(user.getUpdatedAt())
+    					.build())
+    			.collect(Collectors.toList());
+    	
+    	Map<String, List<UserDTO>> groupedByRole = userDTOs.stream()
+    			.collect(Collectors.groupingBy(UserDTO::getRole));
+    	
+    	return groupedByRole;
+    			
     }
 }
