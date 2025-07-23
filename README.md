@@ -1,112 +1,175 @@
-# 🚀 Spring Boot CRUD API with Docker and MySQL
 
-This project is a simple **Java 17 Spring Boot REST API** application for managing users. It uses:
+# 🛠️ Spring Boot CRUD API with Docker & MySQL
 
-- **Spring Boot**
-- **Spring Data JPA**
-- **MySQL (Dockerized)**
-- **Lombok**
-- **Docker + Docker Compose**
+This project is a simple **Spring Boot 3** REST API built using **Java 17**, with a MySQL database running via Docker. It supports basic CRUD operations on a `User` entity.
 
 ---
 
-## 📦 Features
+## 🚀 Features
 
-✅ Create, Read, Update, Delete (CRUD) operations  
-✅ Uses `Lombok` to avoid boilerplate code  
-✅ Stores data in `MySQL` database via JPA  
-✅ Dockerized with a single `docker-compose up`  
-✅ Easy to extend and scale
-
----
-
-Before running this project, make sure you have the following installed:
-
-- [Java 17+](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Maven](https://maven.apache.org/)
-- [Docker](https://www.docker.com/)
-- Git
+- CRUD APIs: Create, Read, Update, Delete users
+- Uses **Lombok** to reduce boilerplate
+- Auto timestamps: `createdAt`, `updatedAt`
+- Dockerized Spring Boot App & MySQL DB
+- DTO mapping with builder pattern
+- Clean service & repository layer structure
 
 ---
 
-## 🚀 Getting Started
+## 🧰 Tech Stack
 
-### 🛠 Step 1: Clone and Build
+- Java 17
+- Spring Boot 3.5.3
+- Spring Data JPA
+- MySQL 8 (via Docker)
+- Maven
+- Lombok
+- Docker & Docker Compose
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── Dockerfile
+├── docker-compose.yml
+├── pom.xml
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/
+│       │       └── app/
+│       │           └── demo/
+│       │               ├── controller/
+│       │               ├── dto/
+│       │               ├── entity/
+│       │               ├── repository/
+│       │               ├── service/
+│       │               └── DemoApplication.java
+│       └── resources/
+│           └── application.properties
+```
+
+---
+
+## ⚙️ Run Instructions
+
+### 1️⃣ Build the Project
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
 mvn clean package -DskipTests
 ```
 
-### 🐳 Step 2: Start MySQL + Spring Boot App
+### 2️⃣ Start Services Using Docker
 
+```bash
 docker-compose up --build
-* MySQL runs on: localhost:3306
-* Spring Boot runs on: http://localhost:8080
+```
 
-| Method | Endpoint      | Description       |
-| ------ | ------------- | ----------------- |
-| GET    | `/users`      | Get all users     |
-| GET    | `/users/{id}` | Get user by ID    |
-| POST   | `/users`      | Create a new user |
-| PUT    | `/users/{id}` | Update user       |
-| DELETE | `/users/{id}` | Delete user       |
+📌 This builds your Spring Boot JAR and starts both:
+- `mysql-docker` (MySQL container)
+- `springboot-app` (your app container)
 
-Example JSON:
+---
+
+## 🌐 API Endpoints
+
+| Method | Endpoint        | Description        |
+|--------|------------------|--------------------|
+| GET    | `/users`         | Get all users      |
+| GET    | `/users/{id}`    | Get user by ID     |
+| POST   | `/users`         | Create user        |
+| PUT    | `/users/{id}`    | Update user        |
+| DELETE | `/users/{id}`    | Delete user        |
+
+### ✅ Sample JSON (POST/PUT)
+
+```json
 {
-  "name": "John",
-  "age": 30,
-  "salary": 50000,
-  "role": "Developer"
+  "name": "Naveen",
+  "age": 28,
+  "salary": 60000,
+  "role": "Backend Developer"
 }
+```
 
-### 🧾 Sample MySQL Configuration
-Inside application.properties:
+---
 
-* spring.datasource.url=jdbc:mysql://localhost:3306/testdb
-* spring.datasource.username=root
-* spring.datasource.password=rootpassword
-* spring.jpa.hibernate.ddl-auto=update
-* spring.jpa.show-sql=true
-* spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+## 🐬 MySQL Database Configuration
 
-### 🐳 Docker Setup
-📄 Dockerfile
-* FROM openjdk:17
-* COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
-* ENTRYPOINT ["java", "-jar", "app.jar"]
+MySQL runs in a container using these environment variables (from `docker-compose.yml`):
 
+```yaml
+environment:
+  MYSQL_ROOT_PASSWORD: rootpassword
+  MYSQL_DATABASE: testdb
+  TZ: Asia/Kolkata
+```
 
-### 🙋‍♂️ Author
-Naveen K
-Full Stack Developer
+### Spring Configuration (`application.properties`)
 
+```properties
+spring.datasource.url=jdbc:mysql://mysql:3306/testdb
+spring.datasource.username=root
+spring.datasource.password=rootpassword
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+```
 
+---
 
-# Reference commands
-  * docker run --name mysql-docker -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb -e TZ=Asia/Kolkata -p 3306:3306 -d mysql:8.0
-  
-  * if you remove the container sql data not stored below comamnd using Use a Docker volume to retain MySQL data across restarts and container rebuilds. \
-  docker run --name mysql-docker -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb -e TZ=Asia/Kolkata -v mysql_data:/var/lib/mysql -p 3306:3306 -d mysql:8.0
-  
-  * cmd line docker mysql login \
-  	docker exec -it mysql-docker mysql -u root -p \
-  	username - root \
-  	password - rootpassword \
-    SHOW DATABASES; \
-    USE testdb;
+## 🛡️ Lombok Annotations Used
 
+| Annotation       | Purpose                                      |
+|------------------|----------------------------------------------|
+| `@Data`          | Getters, Setters, toString, equals, hashCode |
+| `@Builder`       | Builds objects in a readable way             |
+| `@AllArgsConstructor` | Constructor with all fields             |
+| `@NoArgsConstructor`  | Default constructor                     |
+| `@RequiredArgsConstructor` | For constructor injection         |
 
-## Build the jar first
-mvn clean package (need to install maven in local machine)
+---
 
-## Above command error below use(This avoids the Hibernate connection error during testing.)
+## 🐙 Git & Version Control
+
+Add this to `.gitignore` to avoid committing unnecessary files:
+
+```
+/target/
+*.log
+*.class
+.factorypath
+.idea/
+*.iml
+.DS_Store
+.env
+.vscode/
+```
+
+---
+
+## 📦 Build JAR & Deploy
+
+You can build the jar file with:
+
+```bash
 mvn clean package -DskipTests
+```
 
-## Start both services(if you have any changes in the spirngboot project you need to restart)
-docker-compose up --build
+Run locally:
 
-## If you only want to rebuild and restart the Spring Boot app container (and not MySQL):
-docker-compose up --build app
+```bash
+java -jar target/demo-0.0.1-SNAPSHOT.jar
+```
 
+---
+
+## ✍️ Author
+
+**Naveen K**  
+Full Stack Developer  
+📧 GitHub: Naveen3873
+
+---
